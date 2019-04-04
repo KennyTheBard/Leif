@@ -9,16 +9,15 @@ def print_world_map(world):
 	sys.stdout.write('\n')
 
 
-def get_neighbours(pos, world):
+def get_neighbours(pos, world, strength):
 	x = pos[0]
 	y = pos[1]
 	neigh = []
 
-	for i in range(y - 1, y + 2):
-		for j in range(x - 1, x + 2):
+	for i in range(y - strength, y + strength + 1):
+		for j in range(x - strength, x + strength + 1):
 			if i >= 0 and i < len(world) and j >= 0 and j < len(world[0]):
 				neigh.append(world[i][j])
-	print neigh
 	return neigh
 
 
@@ -27,13 +26,13 @@ def set_counters_zero(counters, terrain):
 		counters[terrain[i]] = 0
 
 
-def smoothen(world, terrain):
+def smoothen(world, terrain, strength):
 	counters = {}
 
 	for i in range(len(world)):
 		for j in range(len(world[0])):
 			set_counters_zero(counters, terrain)
-			neigh = get_neighbours((j, i), world)
+			neigh = get_neighbours((j, i), world, strength)
 			for n in neigh:
 				counters[n] += 1
 
