@@ -1,15 +1,25 @@
 class Node:
+	"""
+	Linked list node
+	"""
 	def __init__(self, dataval=None):
 		self.data = dataval
 		self.next = None
 
+
 class LinkedList:
+	"""
+	Linked list itself
+	"""
 	def __init__(self):
 		self.head = None
 		self.tail = None
 
-class Queue:
 
+class Queue:
+	"""
+	Queue implemented with a linked list
+	"""
 	def __init__(self):
 		self.list = LinkedList()
 
