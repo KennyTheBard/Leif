@@ -13,13 +13,12 @@ def print_world_map(world):
 
 
 def get_neighbours(pos, world, strength):
-	x = pos[0]
-	y = pos[1]
+	y = pos[0]
+	x = pos[1]
 	neigh = []
 
 	for i in range(y - strength, y + strength + 1):
 		for j in range(x - strength, x + strength + 1):
-			# print len(world), len(world[0])
 			if i >= 0 and i < len(world) and j >= 0 and j < len(world[0]):
 				neigh.append((i, j))
 	return neigh
@@ -64,7 +63,7 @@ def old_generate(height, width, terrain):
 		x = random.randint(10, width - 11)
 		y = random.randint(10, height - 11)
 		type = random.randint(1, len(terrain) - 1)
-		zones.append((x, y, terrain[type]))
+		zones.append((y, x, terrain[type]))
 
 	for i in range(0, width, 20):
 		zones.append((i, 0, terrain[0]))
@@ -100,23 +99,22 @@ def generate(height, width, terrain):
 	q = queue.Queue()
 	num_zones = random.randint(30, 60)
 	for i in range(num_zones):
-		x = random.randint(10, width - 11)
 		y = random.randint(10, height - 11)
+		x = random.randint(10, width - 11)
 		type = random.randint(1, len(terrain) - 1)
-		q.push((x, y, terrain[type]))
-
-	for i in range(0, width, 20):
-		q.push((i, 0, terrain[0]))
-		q.push((i, height - 1, terrain[0]))
+		q.push((y, x, terrain[type]))
 
 	for i in range(0, height, 20):
+		q.push((i, 0, terrain[0]))
+		q.push((i, width - 1, terrain[0]))
+
+	for i in range(0, width, 20):
 		q.push((0, i, terrain[0]))
-		q.push((width - 1, i, terrain[0]))
+		q.push((height - 1, i, terrain[0]))
 
 
 	while not q.empty():
 		y, x, terr = q.pop()
-		# print y, x
 		if world[y][x] == EMPTY:
 			world[y][x] = terr
 			neigh = get_neighbours((y, x), world, 1)
@@ -125,17 +123,4 @@ def generate(height, width, terrain):
 					if pos[0] != y or pos[1] != x:
 						q.push((pos[0], pos[1], terr))
 
-
-	# for i in range(0, height - 1):
-	# 	for j in range(0, width - 1):
-	# 		min_dist = width * width * height * height
-	# 		min_val = 'X'
-	#
-	# 		for zone in zones:
-	# 			dist = (zone[1] - i) * (zone[1] - i) + (zone[0] - j) * (zone[0] - j)
-	# 			if dist < min_dist:
-	# 				min_dist = dist
-	# 				min_val = zone[2]
-	#
-	# 		world[i][j] = min_val
 	return world

@@ -10,8 +10,8 @@ BUSHES = '~'
 
 terrain = [WATER, GRASS, SAND, TALLGRASS, GRAVEL, STONE, BUSHES]
 
-width = 1000
-height = 1000
+height = 50
+width = 30
 
 world = generator.generate(height, width, terrain)
 
