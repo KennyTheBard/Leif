@@ -4,7 +4,7 @@ import queue
 
 
 # unfilled tiles default value
-EMPTY = 'X'
+EMPTY = 0
 
 
 # helper function that prints the world map

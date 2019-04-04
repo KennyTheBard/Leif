@@ -7,16 +7,18 @@ import loader
 HELP = "help"
 LOAD = "load"
 GENERATE = "gen"
-PRINT = "print"
+SMOOTHEN = "smooth"
+PRINT_MAP = "print_map"
+PRINT_SET = "print_set"
 SET = "set"
 GET = "get"
-LIST = "list"
 EXIT = "exit"
 
 sets = loader.read_sets()
 
 world = []
-param = {"W_RADIUS": 5, "H_RADIUS" : 5, ""}
+terrain = []
+param = {"width": 50, "height" : 50, "strength" : 1}
 cmd = ""
 
 def help():
@@ -27,10 +29,9 @@ def help():
 	print EXIT + "\t\tclose the program"
 
 
-def list():
-	print "Available sets are:"
-	for set in sets:
-		print "\t" + set
+def print_set():
+	print terrain
+
 
 def load(set):
 	global words
@@ -39,12 +40,25 @@ def load(set):
 
 
 def generate():
+	if len(terrain) > 0:
+		world = gen.generate(param["height"], param["width"], terrain)
 
+
+def print_world():
+	gen.print_world_map(world)
 
 
 def set(var_name, var_val):
-	constants[var_name] = var_val
-	print "Valoarea variabilei " + var_name + " a fost updatat la " + var_val
+	constants[var_name.lower()] = var_val
+	print "Valoarea variabilei " + var_name.upper() + " a fost updatat la " + var_val
+
+
+def get(var_name):
+	if var_name.upper() in constants:
+		print "Valoarea variabilei " + var_name.upper() + " a fost updatat la " + constants[var_name.lower()]
+	else:
+		print "Variabile " + var_name.upper() + " nu a fost setata!"
+
 
 def interogate_user():
 	sys.stdout.write(">> ")
@@ -58,15 +72,12 @@ while True:
 		break
 	elif HELP in cmd:
 		help()
-	elif LIST in cmd:
-		list()
+	elif PRINT in cmd:
+		print_world()
 	elif LOAD in cmd:
 		load(cmd.split(" ")[1])
 	elif GENERATE in cmd:
-		if len(cmd.split(" ")) > 1:
-			generate(int(cmd.split(" ")[1]))
-		else:
-			generate(constants["STD_MAX"])
+		generate()
 	elif DEFINE in cmd:
 		if len(cmd.split(" ")) > 2:
 			define(cmd.split(" ")[1], int(cmd.split(" ")[2]))
