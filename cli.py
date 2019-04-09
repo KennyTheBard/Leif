@@ -2,60 +2,85 @@
 from random import randint
 import sys
 import loader
+import generator as gen
 
 # Commands
+EXIT = "exit"
 HELP = "help"
-LOAD = "load"
-GENERATE = "gen"
-SMOOTHEN = "smooth"
+CLEAR = "clear"
 PRINT_MAP = "print_map"
 PRINT_SET = "print_set"
+LOAD = "load"
+GENERATE = "gen"
 SET = "set"
 GET = "get"
-EXIT = "exit"
+SMOOTHEN = "smooth"
 
-sets = loader.read_sets()
+HELP_MESSAGE = "Use <" + HELP + "> for details about how to use the program"
 
 world = []
 terrain = []
-param = {"width": 50, "height" : 50, "strength" : 1}
+vars = {"width": 50, "height" : 50}
 cmd = ""
 
 def help():
-	print LIST + "\t\tlist all the available word sets"
-	print LOAD + " <word_set>\tload the requested load set"
-	print GENERATE + " <max_len>\tcreate a random word out of the previous loaded\n\t\tword set. A word set has to be already loaded.\n\t\tA maximum word length must be selected."
-	print
 	print EXIT + "\t\tclose the program"
+	print CLEAR + "\t\tclear the current map"
+	print PRINT_MAP + "\tprint the current world map"
+	print PRINT_SET + "\tprint the current terrain set"
+	print LOAD + "\t\tload a new terrain set"
+	print GENERATE + "\t\tgenerate a new world"
+	print SET + "\t\tset the value of a variable"
+	print GET + "\t\tget the value of a variable"
+	print SMOOTHEN + "\t\tsmoothen the current map"
+
+
+def clear():
+	world = []
 
 
 def print_set():
 	print terrain
 
 
-def load(set):
-	global words
-	(words, msg) = loader.load(set)
+def load(path):
+	global terrain
+	(terrain, msg) = loader.load(path)
 	print msg
 
 
 def generate():
+	global world
 	if len(terrain) > 0:
-		world = gen.generate(param["height"], param["width"], terrain)
+		world = gen.generate(vars["height"], vars["width"], terrain)
+	else:
+		print "Load a terrain set first!"
+
+
+def smoothen(str):
+	if len(world) > 0 and len(terrain) > 0:
+		gen.smoothen(world, terrain, str)
 
 
 def print_world():
-	gen.print_world_map(world)
+	if len(world) > 0:
+		gen.print_world_map(world)
+	else:
+		print "Generate a world first!"
+
+
+def print_set():
+	print terrain
 
 
 def set(var_name, var_val):
-	constants[var_name.lower()] = var_val
+	vars[var_name.lower()] = var_val
 	print "Valoarea variabilei " + var_name.upper() + " a fost updatat la " + var_val
 
 
 def get(var_name):
-	if var_name.upper() in constants:
-		print "Valoarea variabilei " + var_name.upper() + " a fost updatat la " + constants[var_name.lower()]
+	if var_name.lower() in vars:
+		print "Valoarea variabilei " + var_name.upper() + " a fost updatat la " + str(vars[var_name.lower()])
 	else:
 		print "Variabile " + var_name.upper() + " nu a fost setata!"
 
@@ -72,17 +97,36 @@ while True:
 		break
 	elif HELP in cmd:
 		help()
-	elif PRINT in cmd:
+	elif CLEAR in cmd:
+		clear()
+	elif PRINT_MAP in cmd:
 		print_world()
+	elif PRINT_SET in cmd:
+		print_set()
 	elif LOAD in cmd:
-		load(cmd.split(" ")[1])
+		args = cmd.split(" ")
+		if len(args) > 1:
+			load(args[1])
 	elif GENERATE in cmd:
 		generate()
-	elif DEFINE in cmd:
-		if len(cmd.split(" ")) > 2:
-			define(cmd.split(" ")[1], int(cmd.split(" ")[2]))
+	elif SET in cmd:
+		args = cmd.split(" ")
+		if len(args) > 2:
+			set(args[1], int(args[2]))
 		else:
-			print
+			print HELP_MESSAGE
+	elif GET in cmd:
+		args = cmd.split(" ")
+		if len(args) > 1:
+			get(args[1])
+		else:
+			print HELP_MESSAGE
+	elif SMOOTHEN in cmd:
+		args = cmd.split(" ")
+		if len(args) > 1:
+			smoothen(int(args[1]))
+		else:
+			print HELP_MESSAGE
 	else:
-		print "Use <" + HELP + "> for details about how to use the program"
+		print HELP_MESSAGE
 	print ""
