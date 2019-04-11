@@ -11,6 +11,7 @@ CLEAR = "clear"
 PRINT_MAP = "print_map"
 PRINT_SET = "print_set"
 LOAD = "load"
+SAVE = "save"
 GENERATE = "gen"
 SET = "set"
 GET = "get"
@@ -46,6 +47,11 @@ def print_set():
 def load(path):
 	global terrain
 	(terrain, msg) = loader.load(path)
+	print msg
+
+
+def save(path):
+	msg = loader.save(path, world)
 	print msg
 
 
@@ -107,6 +113,14 @@ while True:
 		args = cmd.split(" ")
 		if len(args) > 1:
 			load(args[1])
+		else:
+			print HELP_MESSAGE
+	elif SAVE in cmd:
+		args = cmd.split(" ")
+		if len(args) > 1:
+			save(args[1])
+		else:
+			print HELP_MESSAGE
 	elif GENERATE in cmd:
 		generate()
 	elif SET in cmd:
