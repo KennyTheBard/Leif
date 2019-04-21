@@ -75,14 +75,14 @@ def print_set():
 
 def set(var_name, var_val):
 	vars[var_name.lower()] = var_val
-	print "Valoarea variabilei " + var_name.upper() + " a fost updatat la " + var_val
+	print "Value of " + var_name.upper() + " has been updated to " + str(vars[var_name.lower()])
 
 
 def get(var_name):
 	if var_name.lower() in vars:
-		print "Valoarea variabilei " + var_name.upper() + " a fost updatat la " + str(vars[var_name.lower()])
+		print "Value of " + var_name.upper() + " is " + str(vars[var_name.lower()])
 	else:
-		print "Variabile " + var_name.upper() + " nu a fost setata!"
+		print var_name.upper() + " has not been defined!"
 
 
 def interogate_user():
@@ -92,7 +92,7 @@ def interogate_user():
 
 
 while True:
-	cmd = interogate_user().lower().strip()
+	cmd = interogate_user().lower().strip().split(" ")
 	if EXIT in cmd:
 		break
 	elif HELP in cmd:
@@ -104,27 +104,23 @@ while True:
 	elif PRINT_SET in cmd:
 		print_set()
 	elif LOAD in cmd:
-		args = cmd.split(" ")
-		if len(args) > 1:
-			load(args[1])
+		if len(cmd) > 1:
+			load(cmd[1])
 	elif GENERATE in cmd:
 		generate()
 	elif SET in cmd:
-		args = cmd.split(" ")
-		if len(args) > 2:
-			set(args[1], int(args[2]))
+		if len(cmd) > 2:
+			set(cmd[1], int(cmd[2]))
 		else:
 			print HELP_MESSAGE
 	elif GET in cmd:
-		args = cmd.split(" ")
-		if len(args) > 1:
-			get(args[1])
+		if len(cmd) > 1:
+			get(cmd[1])
 		else:
 			print HELP_MESSAGE
 	elif SMOOTHEN in cmd:
-		args = cmd.split(" ")
-		if len(args) > 1:
-			smoothen(int(args[1]))
+		if len(cmd) > 1:
+			smoothen(int(cmd[1]))
 		else:
 			print HELP_MESSAGE
 	else:
